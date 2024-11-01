@@ -3,8 +3,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Components/CAttributeComponent.h"`
-#include "Components/COptionComponent.h"`
+#include "Components/CAttributeComponent.h"
+#include "Components/COptionComponent.h"
 
 ACPlayer::ACPlayer()
 {
@@ -56,6 +56,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACPlayer::OnMoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &ACPlayer::OnTurn);
 	PlayerInputComponent->BindAxis("LookUp", this, &ACPlayer::OnLookUp);
+	PlayerInputComponent->BindAxis("Zoom", this, &ACPlayer::OnZoom);
 }
 
 void ACPlayer::OnMoveForward(float Axis)
@@ -80,10 +81,23 @@ void ACPlayer::OnMoveRight(float Axis)
 
 void ACPlayer::OnTurn(float Axis)
 {
-	//Todo. Rotate Control
+	float Rate = Axis * OptionComp->GetMouseXSpeed() * GetWorld()->GetDeltaSeconds();
+
+	AddControllerYawInput(Rate);
 }
 
 void ACPlayer::OnLookUp(float Axis)
 {
+	float Rate = Axis * OptionComp->GetMouseYSpeed() * GetWorld()->GetDeltaSeconds();
+
+	AddControllerPitchInput(Rate);
+}
+
+void ACPlayer::OnZoom(float Axis)
+{
+	float Rate = OptionComp->GetZoomSpeed() * Axis * GetWorld()->GetDeltaSeconds();
+
+	SpringArmComp->TargetArmLength += Rate;
+	SpringArmComp->TargetArmLength = FMath::Clamp(SpringArmComp->TargetArmLength, OptionComp->GetZoomMin(), OptionComp->GetZoomMax());
 }
 
