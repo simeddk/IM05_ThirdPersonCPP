@@ -33,6 +33,6 @@ void UCStateComponent::ChangeType(EStateType InNewType)
 	EStateType PrevType = Type;
 	Type = InNewType;
 
-	OnStateTypeChaged.Broadcast(PrevType, Type);
+	OnStateTypeChanged.Broadcast(PrevType, Type);
 }
 

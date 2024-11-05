@@ -42,7 +42,7 @@ private:
 
 public:
 	UPROPERTY(BlueprintAssignable)
-	FStateTypeChaged OnStateTypeChaged;
+	FStateTypeChaged OnStateTypeChanged;
 
 private:
 	EStateType Type;
