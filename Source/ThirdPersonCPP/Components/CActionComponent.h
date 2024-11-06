@@ -4,10 +4,12 @@
 #include "Components/ActorComponent.h"
 #include "CActionComponent.generated.h"
 
+class UCActionData;
+
 UENUM(BlueprintType)
 enum class EActionType : uint8
 {
-	Unarmed, Fist, OneHand, TwoHand, MagicBall, Warp, WhirlWind
+	Unarmed, Fist, OneHand, TwoHand, MagicBall, Warp, WhirlWind, Max
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FActionTypeChanged, EActionType, InPrevType, EActionType, InNewType);
@@ -60,6 +62,10 @@ private:
 public:
 	UPROPERTY(BlueprintAssignable)
 	FActionTypeChanged OnActionTypeChanged;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "DataAsset")
+	UCActionData* DataAssets[(int32)EActionType::Max];
 
 private:
 	EActionType Type;
