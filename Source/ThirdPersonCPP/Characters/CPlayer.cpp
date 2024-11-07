@@ -31,6 +31,12 @@ ACPlayer::ACPlayer()
 	CHelpers::GetClass(&AnimClass, "/Game/Player/ABP_CPlayer");
 	GetMesh()->SetAnimInstanceClass(AnimClass);
 
+	//Action Comp
+	CHelpers::CreateActorComponent(this, &ActionComp, "ActionComp");
+
+	//Montages Comp
+	CHelpers::CreateActorComponent(this, &MontagesComp, "MontagesComp");
+
 	//AttributeComp
 	CHelpers::CreateActorComponent(this, &AttributeComp, "AttributeComp");
 
@@ -39,12 +45,6 @@ ACPlayer::ACPlayer()
 
 	//State Comp
 	CHelpers::CreateActorComponent(this, &StateComp, "StateComp");
-
-	//Montages Comp
-	CHelpers::CreateActorComponent(this, &MontagesComp, "MontagesComp");
-
-	//Montages Comp
-	CHelpers::CreateActorComponent(this, &ActionComp, "ActionComp");
 
 	//Movement Comp
 	GetCharacterMovement()->MaxWalkSpeed = AttributeComp->GetSprintSpeed();
@@ -59,6 +59,7 @@ void ACPlayer::BeginPlay()
 
 	StateComp->OnStateTypeChanged.AddDynamic(this, &ACPlayer::OnStateTypeChanged);
 	
+	ActionComp->SetUnaremdMode();
 }
 
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

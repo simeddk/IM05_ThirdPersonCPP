@@ -9,6 +9,8 @@ class ACharacter;
 class UCStateComponent;
 class UCAttributeComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEquipmentDelegate);
+
 UCLASS()
 class THIRDPERSONCPP_API ACEquipment : public AActor
 {
@@ -19,6 +21,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	void SetData(FEquipmentData& InData);
+	void SetColor(FLinearColor& InColor);
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
@@ -33,6 +39,10 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void Unequip();
 
+public:
+	UPROPERTY(BlueprintAssignable)
+	FEquipmentDelegate OnEquipmentDelegate;
+
 protected:
 	UPROPERTY(BlueprintReadOnly)
 	ACharacter* OwnerCharacter;
@@ -45,5 +55,5 @@ protected:
 
 private:
 	FEquipmentData Data;
-	FLinearColor Color; //Todo
+	FLinearColor Color;
 };
