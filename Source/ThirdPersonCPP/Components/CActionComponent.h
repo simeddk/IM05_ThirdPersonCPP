@@ -47,6 +47,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool IsWhirlWindMode() const { return Type == EActionType::WhirlWind; }
 
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE UCActionData* GetCurrentDataAsset() { return DataAssets[(int32)Type]; }
+
 	void SetUnaremdMode();
 	void SetFistMode();
 	void SetOneHandMode();
