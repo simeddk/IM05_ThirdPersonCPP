@@ -2,9 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "CActionData.h"
 #include "CDoAction.generated.h"
 
-//Todo. 
+class ACharacter;
+class UCStateComponent;
+class UCAttributeComponent;
+
 UCLASS()
 class THIRDPERSONCPP_API ACDoAction : public AActor
 {
@@ -19,4 +23,23 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	void SetDatas(TArray<FActionData>& InDatas);
+
+	virtual void PrimaryAction() {};
+	virtual void Begin_PrimaryAction() {};
+	virtual void End_PrimaryAction() {};
+
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "DoAction")
+	ACharacter* OwnerCharacter;
+
+	UPROPERTY(BlueprintReadOnly, Category = "DoAction")
+	UCStateComponent* StateComp;
+
+	UPROPERTY(BlueprintReadOnly, Category = "DoAction")
+	UCAttributeComponent* AttributeComp;
+
+protected:
+	TArray<FActionData> Datas;
 };
