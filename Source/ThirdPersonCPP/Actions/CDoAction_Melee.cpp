@@ -38,7 +38,6 @@ void ACDoAction_Melee::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* 
 
 	FDamageEvent DamageEvenet;
 	InOtherCharacter->TakeDamage(Datas[ComboCount].Damage, DamageEvenet, InAttacker->GetController(), InCauser);
-	//Todo. 맞는 쪽에서 TakeDamage override 하기
 }
 
 void ACDoAction_Melee::OnAttachmentEndOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)

@@ -28,6 +28,9 @@ public:
 	void SetMove();
 	void SetStop();
 
+	void IncreaseHealth(float InAmount);
+	void DecreaseHealth(float InAmount);
+
 protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Health")
 	float MaxHealth;
