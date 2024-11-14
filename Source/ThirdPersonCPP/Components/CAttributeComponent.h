@@ -13,7 +13,13 @@ class THIRDPERSONCPP_API UCAttributeComponent : public UActorComponent
 public:	
 	UCAttributeComponent();
 
+protected:
+	virtual void BeginPlay() override;
+
 public:
+	FORCEINLINE float GetMaxHealth() { return MaxHealth; }
+	FORCEINLINE float GetCurrentHealth() { return CurrentHealth; }
+
 	FORCEINLINE float GetSnekSpeed() { return SneakSpeed; }
 	FORCEINLINE float GetWalkSpeed() { return WalkSpeed; }
 	FORCEINLINE float GetSprintSpeed() { return SprintSpeed; }
@@ -23,6 +29,9 @@ public:
 	void SetStop();
 
 protected:
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Health")
+	float MaxHealth;
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Speed")
 	float SneakSpeed;
 
@@ -33,5 +42,6 @@ protected:
 	float SprintSpeed;
 
 private:
+	float CurrentHealth;
 	bool bCanMove;
 };

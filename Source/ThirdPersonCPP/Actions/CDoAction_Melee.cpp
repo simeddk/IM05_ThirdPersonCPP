@@ -31,3 +31,17 @@ void ACDoAction_Melee::End_PrimaryAction()
 	StateComp->SetIdleMode();
 	AttributeComp->SetMove();
 }
+
+void ACDoAction_Melee::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
+{
+	Super::OnAttachmentBeginOverlap(InAttacker, InCauser, InOtherCharacter);
+
+	FDamageEvent DamageEvenet;
+	InOtherCharacter->TakeDamage(Datas[ComboCount].Damage, DamageEvenet, InAttacker->GetController(), InCauser);
+	//Todo. 맞는 쪽에서 TakeDamage override 하기
+}
+
+void ACDoAction_Melee::OnAttachmentEndOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
+{
+	Super::OnAttachmentEndOverlap(InAttacker, InCauser, InOtherCharacter);
+}

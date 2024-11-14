@@ -2,11 +2,14 @@
 #include "Global.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Components/CAttributeComponent.h"
 #include "Components/CStateComponent.h"
 #include "Components/CMontagesComponent.h"
 #include "Components/CActionComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "UI/CNameWidget.h"
+#include "UI/CHealthWidget.h"
 
 ACEnemy::ACEnemy()
 {
@@ -33,6 +36,26 @@ ACEnemy::ACEnemy()
 	//State Comp
 	CHelpers::CreateActorComponent(this, &StateComp, "StateComp");
 
+	//Widget Comp
+	CHelpers::CreateSceneComponent(this, &NameWidgetComp, "NameWidgetComp", GetMesh());
+	CHelpers::CreateSceneComponent(this, &HealthWidgetComp, "HealthWidgetComp", GetMesh());
+	
+	// -> NameWidget
+	TSubclassOf<UCNameWidget> NameWidgetClass;
+	CHelpers::GetClass(&NameWidgetClass, "/Game/UI/WB_Name");
+	NameWidgetComp->SetWidgetClass(NameWidgetClass);
+	NameWidgetComp->SetRelativeLocation(FVector(0, 0, 240));
+	NameWidgetComp->SetDrawSize(FVector2D(240, 30));
+	NameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
+
+	// -> HealthWidget
+	TSubclassOf<UCHealthWidget> HealthWidgetClass;
+	CHelpers::GetClass(&HealthWidgetClass, "/Game/UI/WB_Health");
+	HealthWidgetComp->SetWidgetClass(HealthWidgetClass);
+	HealthWidgetComp->SetRelativeLocation(FVector(0, 0, 190));
+	HealthWidgetComp->SetDrawSize(FVector2D(120, 20));
+	HealthWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
+
 	//Movement Comp
 	GetCharacterMovement()->MaxWalkSpeed = AttributeComp->GetSprintSpeed();
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
@@ -51,6 +74,21 @@ void ACEnemy::BeginPlay()
 
 	//On StateType Changed
 	ActionComp->SetUnaremdMode();
+
+	//Widget Settings
+	NameWidgetComp->InitWidget();
+	UCNameWidget* NameWidgetObject = Cast<UCNameWidget>(NameWidgetComp->GetUserWidgetObject());
+	if (NameWidgetObject)
+	{
+		NameWidgetObject->SetNameText(GetController()->GetName(), GetName());
+	}
+
+	HealthWidgetComp->InitWidget();
+	UCHealthWidget* HealthWidgetObject = Cast<UCHealthWidget>(HealthWidgetComp->GetUserWidgetObject());
+	if (HealthWidgetObject)
+	{
+		HealthWidgetObject->Update(AttributeComp->GetCurrentHealth(), AttributeComp->GetMaxHealth());
+	}
 }
 
 void ACEnemy::SetBodyColor(FLinearColor InColor)
