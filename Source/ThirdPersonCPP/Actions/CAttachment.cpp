@@ -20,6 +20,7 @@ void ACAttachment::BeginPlay()
 		Comp->OnComponentEndOverlap.AddDynamic(this, &ACAttachment::OnComponentEndOverlap);
 	}
 
+	//Hack 02. 최초에는 충돌체 끔
 	OffCollision();
 
 	Super::BeginPlay();

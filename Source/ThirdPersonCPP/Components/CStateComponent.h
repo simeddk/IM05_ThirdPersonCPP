@@ -4,6 +4,7 @@
 #include "Components/ActorComponent.h"
 #include "CStateComponent.generated.h"
 
+//Hack 04. 신규 상태인 Hitted, Dead 추가함
 UENUM(BlueprintType)
 enum class EStateType : uint8
 {

@@ -24,12 +24,14 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	//Hack 01. 적에게 대미지가 들어가도록 이 함수를 작성했었음(겸사겸사 AttributeComp의 Increase, DecreaseHP 함수도 작성함)
 public:
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 public:
 	virtual void SetBodyColor(FLinearColor InColor) override;
 
+	//Hack 05. 상태 변경에 대한 콜백 함수 작성함(겸사겸사 MontagesComp의 PlayHitted 함수도 작성함)
 private:
 	UFUNCTION()
 	void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);

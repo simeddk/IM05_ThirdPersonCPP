@@ -74,6 +74,7 @@ void ACEnemy::BeginPlay()
 	GetMesh()->SetMaterial(0, BodyMaterial);
 	GetMesh()->SetMaterial(1, LogoMaterial);
 
+	//Hack 06. 바인딩도 완료함
 	//On StateType Changed
 	StateComp->OnStateTypeChanged.AddDynamic(this, &ACEnemy::OnStateTypeChanged);
 	ActionComp->SetUnaremdMode();
@@ -138,6 +139,7 @@ void ACEnemy::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
 	}
 }
 
+//Hack 07. 피격에 대한 함수 작성함(체력 게이지 반영, 몽타쥬 반영, 히트백)
 void ACEnemy::Hitted()
 {
 	//Update Health Widget
