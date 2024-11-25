@@ -129,5 +129,6 @@ void UCActionComponent::ChangeType(EActionType InNewType)
 	EActionType PrevType = Type;
 	Type = InNewType;
 
+	//Todo. Release Aim
 	OnActionTypeChanged.Broadcast(PrevType, Type);
 }

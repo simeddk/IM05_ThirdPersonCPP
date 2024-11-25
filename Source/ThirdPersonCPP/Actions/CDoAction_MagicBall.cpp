@@ -4,6 +4,7 @@
 #include "Components/CStateComponent.h"
 #include "Components/CAttributeComponent.h"
 #include "CAim.h"
+#include "CProjectile.h"
 
 void ACDoAction_MagicBall::BeginPlay()
 {
@@ -40,11 +41,41 @@ void ACDoAction_MagicBall::PrimaryAction()
 
 void ACDoAction_MagicBall::Begin_PrimaryAction()
 {
-	//Spawn Projectile
+	Super::Begin_PrimaryAction();
+
+	CheckNull(Datas[0].ProjectileClass);
+
+	FVector CamLoc;
+	FRotator CamRot;
+	OwnerCharacter->GetController()->GetPlayerViewPoint(CamLoc, CamRot);
+
+	FVector HandLocation = OwnerCharacter->GetMesh()->GetSocketLocation("hand_r");
+
+	FVector SpawnLocation = CamLoc + CamRot.Vector() * ((HandLocation - CamLoc) | CamRot.Vector());
+
+	FTransform TM;
+	TM.SetLocation(SpawnLocation);
+	TM.SetRotation(FQuat(CamRot));
+
+	ACProjectile* ProjectileObject = GetWorld()->SpawnActorDeferred<ACProjectile>
+	(
+		Datas[0].ProjectileClass,
+		TM,
+		OwnerCharacter,
+		OwnerCharacter,
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+	);
+
+	ProjectileObject->OnProjectileBeginOverlap.AddDynamic(this, &ACDoAction_MagicBall::OnProjectileBeginOverlap);
+
+	ProjectileObject->FinishSpawning(TM);
+
 }
 
 void ACDoAction_MagicBall::End_PrimaryAction()
 {
+	Super::End_PrimaryAction();
+
 	StateComp->SetIdleMode();
 	AttributeComp->SetMove();
 }
@@ -61,4 +92,34 @@ void ACDoAction_MagicBall::End_SecondaryAction()
 	CheckNull(Aim);
 
 	Aim->Off();
+}
+
+void ACDoAction_MagicBall::OnProjectileBeginOverlap(const FHitResult& InHitResult)
+{
+	//Spawn Impact Effect
+	UParticleSystem* ImpactEffect = Datas[0].Effect;
+	if (ImpactEffect)
+	{
+		FTransform TM = Datas[0].EffectTransfrom;
+		TM.AddToTranslation(InHitResult.ImpactPoint);
+		TM.SetRotation(FQuat(InHitResult.ImpactNormal.Rotation()));
+
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, TM);
+	}
+
+	//Play CameraShake
+	TSubclassOf<UCameraShake> ShakeClass = Datas[0].ShakeClass;
+	if (ShakeClass)
+	{
+		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+		if (PC)
+		{
+			PC->PlayerCameraManager->PlayCameraShake(ShakeClass);
+		}
+	}
+
+	//Take Damage
+	FDamageEvent DamageEvent;
+	InHitResult.GetActor()->TakeDamage(Datas[0].Damage, DamageEvent, OwnerCharacter->GetController(), this);
 }
