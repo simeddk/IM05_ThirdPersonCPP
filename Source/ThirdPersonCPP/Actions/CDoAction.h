@@ -52,4 +52,5 @@ protected:
 
 protected:
 	TArray<FActionData> Datas;
+	const bool* bEquipped; //Todo. 주소 참조 방식이란??
 };
