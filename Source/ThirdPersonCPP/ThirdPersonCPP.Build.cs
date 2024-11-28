@@ -14,7 +14,8 @@ public class ThirdPersonCPP : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-			"UMG" 
+			"UMG",
+			"AIModule"
 		});
 	}
 }

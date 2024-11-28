@@ -33,6 +33,13 @@ public:
 	virtual void OnAttachmentEndOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter) override;
 
 private:
+	UFUNCTION()
+	void TickDamage();
+
+	UFUNCTION()
+	void Deactivate();
+
+private:
 	UPROPERTY(EditDefaultsOnly, Category = "WhirlWind")
 	float DamageToTime;
 
@@ -44,6 +51,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "WhirlWind")
 	float Radius;
+
+	UPROPERTY(VisibleInstanceOnly)
+	UParticleSystemComponent* EffectComp;
 
 private:
 	UBoxComponent* BoxComp;

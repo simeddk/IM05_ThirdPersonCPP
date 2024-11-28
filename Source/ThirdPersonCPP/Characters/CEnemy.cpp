@@ -85,7 +85,7 @@ void ACEnemy::BeginPlay()
 
 	//On StateType Changed
 	StateComp->OnStateTypeChanged.AddDynamic(this, &ACEnemy::OnStateTypeChanged);
-	ActionComp->SetUnaremdMode();
+	//ActionComp->SetUnaremdMode();
 
 	//Widget Settings
 	NameWidgetComp->InitWidget();
@@ -156,6 +156,7 @@ void ACEnemy::SetBodyColor(FLinearColor InColor)
 		return;
 	}
 
+	//Todo. ¿Ö nullptrÀÎ°¡????
 	BodyMaterial->SetVectorParameterValue("BodyColor", InColor);
 	LogoMaterial->SetVectorParameterValue("BodyColor", InColor);
 }
