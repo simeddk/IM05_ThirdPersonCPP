@@ -157,7 +157,6 @@ void ACEnemy::SetBodyColor(FLinearColor InColor)
 		return;
 	}
 
-	//Todo. ¿Ö nullptrÀÎ°¡????
 	BodyMaterial->SetVectorParameterValue("BodyColor", InColor);
 	LogoMaterial->SetVectorParameterValue("BodyColor", InColor);
 }
@@ -223,7 +222,8 @@ void ACEnemy::Dead()
 
 	GetMesh()->AddImpulseAtLocation(Direction * DamageValue * 3000.f, Start);
 
-	//Todo. Off All Attachment Collision
+	//Off All Collisions
+	ActionComp->OffAllCollisions();
 
 	//Start Dissolve Timeline
 	FLinearColor EquipmentColor = FLinearColor::White;
@@ -263,6 +263,7 @@ void ACEnemy::OnProgressDissolve(float Output)
 
 void ACEnemy::OnFinishDissolve()
 {
-	//Todo. Destory All Spawned Equipment, Attachment, DoAction
+	ActionComp->DestroyAll();
+
 	Destroy();
 }
