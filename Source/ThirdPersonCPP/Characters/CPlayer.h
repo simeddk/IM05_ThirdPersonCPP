@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GenericTeamAgentInterface.h"
 #include "Components/CStateComponent.h"
 #include "Interfaces/CCharacterInterface.h"
 #include "CPlayer.generated.h"
@@ -16,7 +17,7 @@ class UCActionComponent;
 class UMaterialInstanceDynamic;
 
 UCLASS()
-class THIRDPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface
+class THIRDPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -24,6 +25,7 @@ public:
 	ACPlayer();
 
 	void SetBodyColor(FLinearColor InColor) override;
+	virtual FGenericTeamId GetGenericTeamId() const override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -89,6 +91,10 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UCActionComponent* ActionComp;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Team")
+	uint8 TeamID;
 
 private:
 	UMaterialInstanceDynamic* BodyMaterial;
