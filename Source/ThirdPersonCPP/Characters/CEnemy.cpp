@@ -65,6 +65,10 @@ ACEnemy::ACEnemy()
 	GetCharacterMovement()->MaxWalkSpeed = AttributeComp->GetSprintSpeed();
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
 
+	//Collision(Camera Channel Ignore)
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
 	//Get Dissolve Curve Asset
 	CHelpers::GetAsset(&DissolveCurve,"/Game/Curves/Curve_Dissolve");
 
