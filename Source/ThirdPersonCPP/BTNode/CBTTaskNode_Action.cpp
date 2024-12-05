@@ -23,7 +23,6 @@ EBTNodeResult::Type UCBTTaskNode_Action::ExecuteTask(UBehaviorTreeComponent& Own
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(EnemyPawn);
 	CheckNullResult(ActionComp, EBTNodeResult::Failed);
 
-	//Todo. SetFocus
 	ActionComp->PrimaryAction();
 
 	return EBTNodeResult::InProgress;
@@ -44,7 +43,6 @@ void UCBTTaskNode_Action::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 
 	if (StateComp->IsIdleMode())
 	{
-		//Todo. ClearFocus
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }
