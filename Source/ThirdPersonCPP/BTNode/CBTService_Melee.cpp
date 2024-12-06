@@ -8,7 +8,7 @@
 
 UCBTService_Melee::UCBTService_Melee()
 {
-	NodeName = "RootService";
+	NodeName = "RootService_Melee";
 }
 
 void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -29,6 +29,14 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 
 	UCPatrolComponent* PatrolComp = CHelpers::GetComponent<UCPatrolComponent>(EnemyPawn);
 	//CheckNull(PatrolComp);
+
+	//Dead
+	if (StateComp->IsDeadMode())
+	{
+		BehaviorComp->SetWaitMode();
+		AIC->GetBrainComponent()->StopLogic("Dead");
+		return;
+	}
 
 	//Hitted
 	if (StateComp->IsHittedMode())
