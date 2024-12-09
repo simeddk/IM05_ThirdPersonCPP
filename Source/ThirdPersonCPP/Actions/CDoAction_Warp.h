@@ -25,6 +25,8 @@ public:
 private:
 	bool GetCursorLocation(FVector& OutLocation);
 	void SetPerviewMeshColor(FLinearColor InColor);
+
+	bool IsOwnerPlayer();
 	
 private:
 	USkeletalMeshComponent* PerviewMeshComp;
