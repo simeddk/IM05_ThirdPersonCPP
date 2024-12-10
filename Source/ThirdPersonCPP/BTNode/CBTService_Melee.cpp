@@ -65,6 +65,12 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	float Distance = EnemyPawn->GetDistanceTo(Player);
 	
 	//Perceived Player
+	UCStateComponent* OtherStateComp = CHelpers::GetComponent<UCStateComponent>(Player);
+	if (OtherStateComp && OtherStateComp->IsDeadMode())
+	{
+		BehaviorComp->SetWaitMode();
+		return;
+	}
 
 	//In Action Range
 	if (Distance < AIC->GetBehaviorRange())

@@ -4,6 +4,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/CAttributeComponent.h"
 #include "Components/COptionComponent.h"
 #include "Components/CMontagesComponent.h"
@@ -109,6 +110,28 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("PrimaryAction", IE_Pressed, this, &ACPlayer::OnPrimaryAction);
 	PlayerInputComponent->BindAction("SecondaryAction", IE_Pressed, this, &ACPlayer::OnBeginSecondaryAction);
 	PlayerInputComponent->BindAction("SecondaryAction", IE_Released, this, &ACPlayer::OnEndSecondaryAction);
+}
+
+float ACPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	DamageInstigator = EventInstigator;
+	DamageValue = ActualDamage;
+
+	ActionComp->Abort();
+
+	AttributeComp->DecreaseHealth(Damage);
+
+	if (AttributeComp->GetCurrentHealth() <= 0.f)
+	{
+		StateComp->SetDeadMode();
+		return ActualDamage;
+	}
+
+	StateComp->SetHittedMode();
+
+	return ActualDamage;
 }
 
 void ACPlayer::OnMoveForward(float Axis)
@@ -275,6 +298,46 @@ void ACPlayer::RollingRotation()
 	SetActorRotation(Rotation);
 }
 
+void ACPlayer::Hitted()
+{
+	MontagesComp->PlayHitted();
+	AttributeComp->SetStop();
+}
+
+void ACPlayer::Dead()
+{
+	//Ragdoll
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetCollisionProfileName("Ragdoll");
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->DisableMovement();
+
+	//Add Impulse
+	FVector Start = GetActorLocation();
+	FVector Target = DamageInstigator->GetPawn()->GetActorLocation();
+	FVector Direction = Start - Target;
+	Direction.Normalize();
+
+	GetMesh()->AddImpulseAtLocation(Direction * DamageValue * 3000.f, Start);
+
+	//Off All Collisions
+	ActionComp->OffAllCollisions();
+
+	//Disable Input
+	DisableInput(GetController<APlayerController>());
+
+	//Somekind of effect????
+
+	//End_Dead Tiemr
+	UKismetSystemLibrary::K2_SetTimer(this, "End_Dead", 5.f, false);
+}
+
+void ACPlayer::End_Dead()
+{
+	//Todo. What???
+	//Bug?? 적끼리 감지 되는건가?
+}
+
 void ACPlayer::End_Roll()
 {
 	UCActionData* CurrentDA = ActionComp->GetCurrentDataAsset();
@@ -314,6 +377,18 @@ void ACPlayer::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
 		case EStateType::Backstep:
 		{
 			Begin_Backstep();
+		}
+		break;
+
+		case EStateType::Hitted:
+		{
+			Hitted();
+		}
+		break;
+
+		case EStateType::Dead:
+		{
+			Dead();
 		}
 		break;
 	}

@@ -57,6 +57,13 @@ void UCBTService_Wizard::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* Node
 	float Distance = EnemyPawn->GetDistanceTo(Player);
 
 	//Perceived Player
+	UCStateComponent* OtherStateComp = CHelpers::GetComponent<UCStateComponent>(Player);
+	if (OtherStateComp && OtherStateComp->IsDeadMode())
+	{ 
+		BehaviorComp->SetWaitMode();
+		return;
+	}
+
 	AIC->SetFocus(Player);
 
 	//In Action Range
