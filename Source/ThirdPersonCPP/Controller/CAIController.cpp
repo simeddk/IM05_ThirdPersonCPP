@@ -95,9 +95,20 @@ void ACAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors)
 
 		if (Player)
 		{
+			UCStateComponent* StateComp = CHelpers::GetComponent<UCStateComponent>(Player);
+			StateComp->OnStateTypeChanged.AddDynamic(this, &ACAIController::RemovePlayerKey);
+
 			break;
 		}
 	}
 
 	Blackboard->SetValueAsObject("PlayerKey", Player);
+}
+
+void ACAIController::RemovePlayerKey(EStateType InPrevType, EStateType InNewType)
+{
+	if (InNewType == EStateType::Dead)
+	{
+		Blackboard->SetValueAsObject("PlayerKey", nullptr);
+	}
 }
