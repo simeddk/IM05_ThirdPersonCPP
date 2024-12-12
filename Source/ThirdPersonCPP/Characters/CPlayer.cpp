@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/PostProcessComponent.h"
 #include "Components/CAttributeComponent.h"
@@ -59,9 +60,7 @@ ACPlayer::ACPlayer()
 
 	//PostPross Comp
 	CHelpers::CreateSceneComponent<UPostProcessComponent>(this, &PostProcessComp, "PostProcessComp", GetRootComponent());
-	//Todo. 머티리얼을 넣으려면?
-	//UMaterialInstanceConstant* Mat;
-	//PostProcessComp->AddOrUpdateBlendable(Mat);
+	PostProcessComp->bEnabled = false;
 
 	//Property Settings
 	TeamID = 0;
@@ -77,6 +76,12 @@ void ACPlayer::BeginPlay()
 	
 	GetMesh()->SetMaterial(0, BodyMaterial);
 	GetMesh()->SetMaterial(1, LogoMaterial);
+
+	//Set PostProcess Material
+	if (PostProcessMaterial)
+	{
+		PostProcessComp->AddOrUpdateBlendable(PostProcessMaterial, 1);
+	}
 
 	//On StateType Changed
 	StateComp->OnStateTypeChanged.AddDynamic(this, &ACPlayer::OnStateTypeChanged);
@@ -335,7 +340,8 @@ void ACPlayer::Dead()
 	//Disable Input
 	DisableInput(GetController<APlayerController>());
 
-	//Somekind of effect????
+	//PostProcess
+	PostProcessComp->bEnabled = true;
 
 	//End_Dead Tiemr
 	UKismetSystemLibrary::K2_SetTimer(this, "End_Dead", 5.f, false);
@@ -343,8 +349,16 @@ void ACPlayer::Dead()
 
 void ACPlayer::End_Dead()
 {
-	//Todo. What???
-	//Bug?? 적끼리 감지 되는건가?
+	ensure(GameOverWidgetClass);
+
+	APlayerController* PC = GetController<APlayerController>();
+	CheckNull(PC);
+
+	UUserWidget* GameOverWidget = CreateWidget<UUserWidget>(PC, GameOverWidgetClass);
+	GameOverWidget->AddToViewport();
+
+	PC->bShowMouseCursor = true;
+	PC->SetInputMode(FInputModeGameAndUI());
 }
 
 void ACPlayer::End_Roll()

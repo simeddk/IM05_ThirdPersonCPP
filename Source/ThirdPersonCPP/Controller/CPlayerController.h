@@ -21,10 +21,20 @@ public:
 	UFUNCTION(BlueprintCallable, Exec)
 	void ToggleOptionMenu();
 
+private:
+	void EnableSelectActionWidget();
+	void DiableSelectActionWidget();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> OptionMenuClass;
 
 	UPROPERTY(BlueprintReadOnly, Category = "UI")
 	UUserWidget* OptionMenu;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> SelectActionWidgetClass;
+
+	UPROPERTY(BlueprintReadOnly, Category = "UI")
+	UUserWidget* SelectActionWidget;
 };

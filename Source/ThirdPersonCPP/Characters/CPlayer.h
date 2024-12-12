@@ -16,6 +16,7 @@ class UCMontagesComponent;
 class UCActionComponent;
 class UMaterialInstanceDynamic;
 class UPostProcessComponent;
+class UMaterialInstanceConstant;
 
 UCLASS()
 class THIRDPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface, public IGenericTeamAgentInterface
@@ -107,6 +108,12 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Team")
 	uint8 TeamID;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Dead")
+	UMaterialInstanceConstant* PostProcessMaterial;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Dead")
+	TSubclassOf<UUserWidget> GameOverWidgetClass;
 
 private:
 	UMaterialInstanceDynamic* BodyMaterial;

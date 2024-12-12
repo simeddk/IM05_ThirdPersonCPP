@@ -114,7 +114,7 @@ void ACDoAction_WhirlWind::Abort()
 {
 	Super::Abort();
 
-	//Todo. Abort by damaged test 
+	Deactivate();
 }
 
 void ACDoAction_WhirlWind::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)

@@ -12,6 +12,9 @@ void ACPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	InputComponent->BindAction("OptionMenu", IE_Pressed, this, &ACPlayerController::ToggleOptionMenu);
+
+	InputComponent->BindAction("SelectAction", IE_Pressed, this, &ACPlayerController::EnableSelectActionWidget);
+	InputComponent->BindAction("SelectAction", IE_Released, this, &ACPlayerController::DisbleSelectActionWidget);
 }
 
 void ACPlayerController::ToggleOptionMenu()
@@ -36,4 +39,25 @@ void ACPlayerController::ToggleOptionMenu()
 
 	bShowMouseCursor = true;
 	SetInputMode(FInputModeGameAndUI());
+}
+
+void ACPlayerController::EnableSelectActionWidget()
+{
+	//Todo. 
+	if (!SelectActionWidget)
+	{
+		SelectActionWidget = CreateWidget(this, SelectActionWidgetClass);
+	}
+
+	if (SelectActionWidget)
+	{
+		SelectActionWidget->AddToViewport();
+
+		bShowMouseCursor = true;
+		SetInputMode(FInputModeGameAndUI());
+	}
+}
+
+void ACPlayerController::DiableSelectActionWidget()
+{
 }
