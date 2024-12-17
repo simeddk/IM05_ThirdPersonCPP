@@ -1,6 +1,7 @@
 #include "CAnimInstance.h"
 #include "Global.h"
 
+
 void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
@@ -10,12 +11,17 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	Speed = OwnerPawn->GetVelocity().Size2D();
 	Direction = CalculateDirection(OwnerPawn->GetVelocity(), OwnerPawn->GetControlRotation());
+
+	UCFeetComponent* FeetComp = CHelpers::GetComponent<UCFeetComponent>(OwnerPawn);
+	if (FeetComp)
+	{
+		FeetData = FeetComp->GetData();
+	}
 }
 
 void UCAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
-
 
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(TryGetPawnOwner());
 	CheckNull(ActionComp);
